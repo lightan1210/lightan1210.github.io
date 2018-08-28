@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.min.js"></script>
+</head>
+<body>
+
+    <script>
+    var config = {
+        type: Phaser.AUTO,
+        width: 600,
+        height: 600,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 0 }
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    function preload ()
+    {
+        //this.load.setBaseURL('http://labs.phaser.io');
+
+           this.load.image('pitch', 'pitch.png');
+           this.load.spritesheet('neymar', 'ney.png', { frameWidth: 70, frameHeight: 85 },3);
+           this.load.spritesheet('neymar2', 'ney2.png', { frameWidth: 70, frameHeight: 85 },3);
+           this.load.image('contrario', 'ney2Quieto.png');
+
+
+    }
+
+    var pitch, player,walk;
+
+    function create ()
+    {
+            
+
+        pitch = this.add.tileSprite(300, 300, 600, 600, 'pitch');
+        player = this.physics.add.sprite(300, 500, 'neymar').setScale(1.5);
+        player2 = this.physics.add.sprite(300, 500, 'neymar2').setScale(1.5);
+        //player2 = this.add.tileSprite(50, 50, 70, 85, 'contrario').setScale(1);
+        //player2.x = Phaser.Math.Between(50, 550);
+        //player2.y = 10;
+        player.setCollideWorldBounds(true);
+        //player2.setCollideWorldBounds(false);
+
+        //player2.setVelocityY(50);
+
+
+        var config = {
+            key: 'walk',
+            frames: this.anims.generateFrameNumbers('neymar', { start: 0, end: 2, first: 0 }),
+            frameRate: 10,
+            repeat: -1
+            //repeatDelay: 3
+        };
+
+        var config2 = {
+            key: 'walk2',
+            frames: this.anims.generateFrameNumbers('neymar2', { start: 0, end: 2, first: 0 }),
+            frameRate: 10,
+            repeat: -1
+            //repeatDelay: 3
+        };
+
+        this.anims.create(config);
+        player.anims.play('walk');
+        this.anims.create(config2);
+        player2.anims.play('walk2');
+        
+
+        
+
+        //  Input Events
+        cursors = this.input.keyboard.createCursorKeys();
+
+        //this.physics.add.collider(this.player, obstacles);
+
+
+
+    }
+
+    function update() {
+        pitch.tilePositionY -= 1;
+
+        if(player2.y >= 1000){
+            player2.y = 0;
+            player2.x = Phaser.Math.Between(50, 550);
+        }
+        else
+            //player2.y += Phaser.Math.Between(1,10);
+            player2.y += 4;
+
+        player.body.setVelocity(0);
+
+        if (cursors.left.isDown){
+            player.setVelocityX(-160);
+        } else if (cursors.right.isDown){
+            player.setVelocityX(160);       
+        } else if (cursors.up.isDown){
+            player.setVelocityY(-160);       
+        } else if (cursors.down.isDown){
+            player.setVelocityY(160);       
+        }
+        
+    }
+
+    </script>
+
+</body>
+</html>
