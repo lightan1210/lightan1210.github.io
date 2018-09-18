@@ -7,19 +7,22 @@
 
     </head>
 
-    <body>
+    <body style="text-align: center;">
 
         <script>
         
-        var cancha, neymar, chocado, chocado2, scoreText, temporizador, exploto, cursors;
+        var cancha, neymar, chocado, chocado2, scoreText, endGameText, timeText, temporizador, exploto, cursors, sound_enabled = true, soundInfo , vibration_enabled = true, vibrationInfo;
 
         var config, config2, config3, config4;
 
-        var score = 0, cantSegundos = 60, puntajeCorriendo = 5, puntajeRodando = 10, penalizacionArbitro = 2, penalizacionZuniga = 5, duracionCredits = 2;
+        var pauseButton, playButton, resumeButton, homeButton, homeButton2, replayButton;
+
+        var score, cantSegundos, puntajeCorriendo = 5, puntajeRodando = 10, penalizacionArbitro = 2, penalizacionZuniga = 5, duracionCredits = 2;
 
 
 
-        var Credits = new Phaser.Class({
+        var Credits = new Phaser.Class(
+        {
 
         	Extends: Phaser.Scene,
 
@@ -27,7 +30,7 @@
 
             function Credits ()
             {
-                Phaser.Scene.call(this, { key: 'Credits' });
+                Phaser.Scene.call(this, { key: 'credits' });
             },
 
             preload: function ()
@@ -36,7 +39,23 @@
 
                 this.load.image('explosion', 'explosion2.png');
 
-                this.load.image('unco','LOGOUNCO.png')
+                this.load.image('unco','LOGOUNCO.png');
+
+                this.load.image('pause','pausa.png');
+
+                this.load.image('play','play.png');
+
+                this.load.image('replay','replay.png');
+
+                this.load.image('home','home.png');
+
+                this.load.image('sound_on','sound_on.png');
+
+                this.load.image('sound_off','sound_off.png');
+
+                this.load.image('vibration_on','vibration_on.png');
+
+                this.load.image('vibration_off','vibration_off.png');
 
 
                 this.load.spritesheet('neymar', 'ney.png', {frameWidth: 35, frameHeight: 47}, 3);
@@ -63,21 +82,25 @@
 
 				var width = this.cameras.main.width;
 				var height = this.cameras.main.height;
-				var loadingText = this.make.text({
+				var loadingText = this.make.text(
+                {
 				    x: width / 2,
 				    y: height / 2 - 50,
 				    text: 'Loading...',
-				    style: {
+				    style:
+                    {
 				        font: '20px monospace',
 				        fill: '#ffffff'
 				    }
 				});
 				loadingText.setOrigin(0.5, 0.5);
-				var percentText = this.make.text({
+				var percentText = this.make.text(
+                {
 				    x: width / 2,
 				    y: height / 2 - 5,
 				    text: '0%',
-				    style: {
+				    style:
+                    {
 				        font: '18px monospace',
 				        fill: '#ffffff'
 				    }
@@ -120,7 +143,8 @@
         });
 
 
-        var MainMenu = new Phaser.Class({
+        var MainMenu = new Phaser.Class(
+        {
 
             Extends: Phaser.Scene,
 
@@ -128,7 +152,7 @@
 
             function MainMenu ()
             {
-                Phaser.Scene.call(this, { key: 'MainMenu' });
+                Phaser.Scene.call(this, { key: 'mainMenu' });
             },
 
             preload: function ()
@@ -150,17 +174,264 @@
                     this.scene.start('JuegoScene');
 
                 }, this);*/
-                const helloButton = this.add.text(100, 100, 'Click me to play!', { fill: '#0f0' });
+                helloButton = this.add.text(100, 100, 'Click me to play!', { fill: '#0f0' });
                 helloButton.setInteractive();
 
-                helloButton.on('pointerdown', () => {this.scene.start('JuegoScene');  });
+                helloButton.on('pointerdown', () => {this.scene.start('juegoScene'); //this.scene.stop();
+            	});
+
+                //settingsButton = this.add.text(100, 200, 'Settings', { fill: '#0f0' });
+                //settingsButton.setInteractive();
+
+                //settingsButton.on('pointerdown', () => {this.scene.start('settingsScene'); //this.scene.stop(); });
+            }
+
+        });
+
+
+        var Pause = new Phaser.Class(
+        {
+
+            Extends: Phaser.Scene,
+
+            initialize:
+
+            function Pause ()
+            {
+                Phaser.Scene.call(this, { key: 'pauseScene' });
+            },
+
+            preload: function ()
+            {
+
+            },
+
+            create: function ()
+            {
+               
+
+            	resumeButton = this.add.text(100, 100, 'Resume', { fill: '#0f0' });
+                resumeButton.setInteractive();
+
+                resumeButton.on('pointerdown', () => {this.scene.switch('juegoScene'); this.scene.stop(); if(sound_enabled)this.sound.play('star');});
+
+
+                homeButton2 = this.add.text(100, 200, 'Back to main menu', { fill: '#0f0' });
+                homeButton2.setInteractive();
+
+                homeButton2.on('pointerdown', () => {this.scene.switch('mainMenu'); this.scene.stop('juegoScene');});
+
+
+                soundOnButton = this.add.image(250, 300, 'sound_on').setScale(0.15);
+	            soundOnButton.setInteractive();
+
+	            soundOffButton = this.add.image(350, 300, 'sound_off').setScale(0.15);
+	            soundOffButton.setInteractive();
+
+	           
+
+                soundOnButton.on('pointerdown', () =>
+                {
+                	sound_enabled = true;
+            	});
+
+
+            	soundOffButton.on('pointerdown', () =>
+                {
+            		sound_enabled = false;
+            	});
+
+            	soundInfo = this.add.text(250, 350, '', { fill: '#0f0' });
+
+
+
+
+
+
+                vibrationOnButton = this.add.image(250, 450, 'vibration_on').setScale(0.4);
+	            vibrationOnButton.setInteractive();
+
+	            vibrationOffButton = this.add.image(350, 450, 'vibration_off').setScale(0.4);
+	            vibrationOffButton.setInteractive();
+
+	           
+
+                vibrationOnButton.on('pointerdown', () =>
+                {
+                	vibration_enabled = true;
+            	});
+
+
+            	vibrationOffButton.on('pointerdown', () =>
+                {
+            		vibration_enabled = false;
+            	});
+
+            	vibrationInfo = this.add.text(250, 500, '', { fill: '#0f0' });
+
+
+            },
+
+
+            update:function()
+            {
+            	if(sound_enabled)
+            		soundInfo.setText('SOUND: ON');
+            	else
+            		soundInfo.setText('SOUND: OFF');
+
+            	if(vibration_enabled)
+            		vibrationInfo.setText('VIBRATION: ON');
+            	else
+            		vibrationInfo.setText('VIBRATION: OFF');
             }
 
         });
 
 
 
-        var JuegoScene = new Phaser.Class({
+        /*var SettingsScene = new Phaser.Class({
+
+            Extends: Phaser.Scene,
+
+            initialize:
+
+            function Pause ()
+            {
+                Phaser.Scene.call(this, { key: 'settingsScene' });
+            },
+
+            preload: function ()
+            {
+
+            },
+
+            create: function ()
+            {
+               
+            	soundOnButton = this.add.image(250, 350, 'sound_on').setScale(0.04);
+	            soundOnButton.setInteractive();
+
+	            soundOffButton = this.add.image(350, 350, 'sound_off').setScale(0.15);
+	            soundOffButton.setInteractive();
+
+	           
+
+                soundOnButton.on('pointerdown', () => {
+
+                	sound_enabled = true;
+            		//neymar.visible = false;
+            		//this.sound.stopAll('star');
+            		
+            		//pauseButton.visible = false;
+            		//playButton.visible = true;
+
+
+            		
+            	});
+
+
+            	soundOffButton.on('pointerdown', () => {
+
+                	
+
+            		sound_enabled = false;
+
+            		//neymar.visible = false;
+            		//this.sound.stopAll('star');
+            		
+            		//pauseButton.visible = false;
+            		//playButton.visible = true;
+
+
+            		
+            	});
+            	
+
+
+            }
+
+        });*/
+
+
+        var EndGame = new Phaser.Class(
+        {
+
+            Extends: Phaser.Scene,
+
+            initialize:
+
+            function Pause ()
+            {
+                Phaser.Scene.call(this, { key: 'endGame' });
+            },
+
+            preload: function ()
+            {
+
+            },
+
+            create: function ()
+            {
+               
+            	endGameText = this.add.text(160, 250, 'FIN DEL PARTIDO').setScale(2);
+            	
+                   
+            	replayButton = this.add.image(250, 350, 'replay').setScale(0.04);
+	            replayButton.setInteractive();
+
+	            homeButton = this.add.image(350, 350, 'home').setScale(0.75);
+	            homeButton.setInteractive();
+
+	           
+
+                replayButton.on('pointerdown', () =>
+                {
+
+                	score = 0, 
+                	cantSegundos = 60, 
+
+            		this.scene.start('juegoScene');
+            		this.scene.stop();
+            		//neymar.visible = false;
+            		//this.sound.stopAll('star');
+            		
+            		//pauseButton.visible = false;
+            		//playButton.visible = true;
+
+
+            		
+            	});
+
+
+            	homeButton.on('pointerdown', () =>
+                {
+
+                	
+
+            		this.scene.switch('mainMenu');
+            		this.scene.stop();
+
+            		//neymar.visible = false;
+            		//this.sound.stopAll('star');
+            		
+            		//pauseButton.visible = false;
+            		//playButton.visible = true;
+
+
+            		
+            	});
+
+
+            }
+
+        });
+
+
+
+
+        var JuegoScene = new Phaser.Class(
+        {
 
 
 
@@ -170,16 +441,19 @@
 
             function JuegoScene ()
             {
-                Phaser.Scene.call(this, { key: 'JuegoScene' });
+                Phaser.Scene.call(this, { key: 'juegoScene' });
             },
 
             preload: function ()
             {
                 
+            
          	},
 
             create: function ()
             {
+            	score = 0;
+            	cantSegundos = 60;
                 cancha = this.add.tileSprite(300, 300, 600, 600, 'pitch');
                 neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 500, 'neymar').setScale(2.5);
                 oponente = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
@@ -187,6 +461,7 @@
                 arbitro = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'arbitro').setScale(2.5);
                 oponente2 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
 
+                
                 neymar.setCollideWorldBounds(true);
 
                 this.physics.add.overlap(neymar, oponente, choque, null, this);
@@ -196,10 +471,13 @@
 
                 this.physics.add.overlap(neymar, arbitro, choqueA, null, this);
 
+
+
                 exploto =  this.add.image(10, 10, 'explosion').setScale(1.5);
 
 
-                config = {
+                config =
+                {
                     key: 'walkNey',
                     frames: this.anims.generateFrameNumbers('neymar', {start: 0, end: 2, first: 0}),
                     frameRate: 10,
@@ -207,7 +485,8 @@
                             //repeatDelay: 3
                 };
 
-                config2 = {
+                config2 =
+                {
                     key: 'walkOponente',
                     frames: this.anims.generateFrameNumbers('oponente', {start: 0, end: 2, first: 0}),
                     frameRate: 10,
@@ -215,7 +494,8 @@
                             //repeatDelay: 3
                 };
 
-                config3 = {
+                config3 =
+                {
                     key: 'rodar',
                     frames: this.anims.generateFrameNumbers('neymarT', {start: 0, end: 3, first: 0}),
                     frameRate: 10,
@@ -223,7 +503,8 @@
                             //repeatDelay: 3
                 };
 
-                config4 = {
+                config4 =
+                {
                     key: 'walkZunniga',
                     frames: this.anims.generateFrameNumbers('zuniga', {start: 0, end: 2, first: 0}),
                     frameRate: 10,
@@ -231,7 +512,8 @@
                             //repeatDelay: 3
                 };
 
-                config5 = {
+                config5 =
+                {
                     key: 'walkArbitro',
                     frames: this.anims.generateFrameNumbers('arbitro', {start: 0, end: 2, first: 0}),
                     frameRate: 10,
@@ -251,12 +533,16 @@
                 zuniga.anims.play('walkZunniga');
                 arbitro.anims.play('walkArbitro');
 
-                this.sound.play('star');
+                if(sound_enabled)
+                	this.sound.play('star');
 
 
                 //Temporizador y puntaje
                 temporizador = this.time.addEvent({delay: 1000, callback: descontar, callbackScope: this});
                 scoreText = this.add.text(16, 16, 'Score: 0', {fontSize: '32px', fill: '#f00'});
+
+
+
                 timeText = this.add.text(420, 16, 'Time: ' + cantSegundos, {fontSize: '32px', fill: '#f00'});
 
 
@@ -274,10 +560,13 @@
                 //swipe.cargar(this);
 
 
-                if(this.sys.game.device.os.desktop){
+                if(this.sys.game.device.os.desktop)
+                {
 
-                	this.input.keyboard.on('keydown_UP', function (event) {
-				  		if (chocado) {
+                	this.input.keyboard.on('keydown_UP', function (event)
+                    {
+				  		if (chocado)
+                        {
 	                        chocado = false;
 	                        //this.sound.stopAll();
 	                        neymar.anims.play('walkNey');
@@ -285,79 +574,140 @@
                     	}
 					});
 
-					this.input.keyboard.on('keydown_LEFT', function (event) {
+					this.input.keyboard.on('keydown_LEFT', function (event)
+                    {
 				  		neymar.setVelocityX(-160);
 					});
 
-					this.input.keyboard.on('keydown_RIGHT', function (event) {
+					this.input.keyboard.on('keydown_RIGHT', function (event)
+                    {
 				  		neymar.setVelocityX(160);
 					});
                 	
 
                 	
-	             }else{
+	             }
+                 else
+                 {
 	             	let swipe = this.plugins.get('Phaser3Swipe');
                 	swipe.cargar(this);
-	                 this.events.on("swipe", (e) => {
-	                        if(e.right) {
+	                 this.events.on("swipe", (e) =>
+                     {
+	                        if(e.right)
+                            {
 	                            
 	                            neymar.setVelocityX(160);
 
 	                           // alert("R");                       
 	                        }
-	                        else if(e.left) {
+	                        else if(e.left)
+                            {
 	                            neymar.setVelocityX(-160);
 	                            //alert("L");
 	                        }
-	                        else if(e.up) {
+	                        else if(e.up)
+                            {
 	                            chocado = false;
 	                            //this.sound.stopAll();
 	                            neymar.anims.play('walkNey');
 	                            chocado2 = false;
 	                            //alert("U");
 	                        }
-	                        else if(e.down) {
+	                        else if(e.down)
+                            {
 	                            //console.log("Hacer algo a la abajo");      
 	                        }
 	                });
 	             };
+
+	            /* playButton = this.add.image(300, 30, 'play').setScale(0.1);
+            		playButton.setInteractive();
+            		playButton.on('pointerdown', () => {playButton.visible= false; pauseButton.visible=true;});
+            		playButton.visible= false;
+				*/
+				
+	            pauseButton = this.add.image(300, 30, 'pause').setScale(0.1);
+	            pauseButton.setInteractive();
+
+	           
+
+                pauseButton.on('pointerdown', () =>
+                {
+
+                	/*neymar.anims.pause(); 
+            		oponente.anims.pause();
+            		oponente2.anims.pause();
+            		arbitro.anims.pause();
+            		zuniga.anims.pause();*/
+            		//this.temporizador.
+            		//pauseButton.visible = false;
+            		//playButton.visible = true; 
+            		
+            		//this.scene.pause();
+            		this.scene.switch('pauseScene');
+            		//neymar.visible = false;
+            		if(sound_enabled)
+            			this.sound.stopAll();
+            		
+            		//pauseButton.visible = false;
+            		//playButton.visible = true;
+
+
+            		
+            	});
+
+
+
+
             },
 
             update: function ()
             {
-                if (oponente.y >= 1000) {
+                if (oponente.y >= 1000)
+                {
                     oponente.visible = true;
                     oponente.y = 0;
                     oponente.x = Phaser.Math.Between(50, 300);
-                } else
+                }
+                else
                     oponente.y += 2; //El oponente avanza 2 lugares
 
-                if (oponente2.y >= 1000) {
+                if (oponente2.y >= 1000)
+                {
                     oponente2.visible = true;
                     oponente2.y = 0;
                     oponente2.x = Phaser.Math.Between(300, 550);
-                } else
+                }
+                else
                     oponente2.y += 2; //El oponente avanza 2 lugares
 
-                if (zuniga.y >= 1000) {
+                if (zuniga.y >= 1000)
+                {
                     zuniga.visible = true;
                     zuniga.y = 0;
                     zuniga.x = Phaser.Math.Between(50, 550);
-                } else
+                }
+                else
                     zuniga.y += 5; //Zuñiga avanza 5 lugares
 
-                if (arbitro.y >= 1000) {
+                if (arbitro.y >= 1000)
+                {
                     arbitro.visible = true;
                     arbitro.y = 0;
                     arbitro.x = Phaser.Math.Between(50, 550);
-                } else {
+                }
+                else
+                {
                     arbitro.x = neymar.x;
                     arbitro.y += 1; //Avanza el arbitro un lugar
                 }
 
-                if(mostarExp){
+                if(mostarExp)
+                {
 					mostarExp = false;
-				}else{
+				}
+                else
+                {
 					exploto.visible = false; 
 				}   
 
@@ -368,35 +718,38 @@
 
         });
 
-		function descontar() {
+		function descontar()
+        {
 
-                if (cantSegundos > 0) {
+                if (cantSegundos > 0)
+                {
                     cantSegundos--;
                     timeText.setText('Time: ' + cantSegundos);
                     temporizador.reset({delay: 1000, callback: descontar, callbackScope: this, repeat: 1});
-                } else {
-
-                    timeText.x = 10;
-                    timeText.y = 250;
-                    timeText.setScale(2);
-                    timeText.setText('FIN DEL PARTIDO');
-
-                    this.scene.pause();
-                    this.sound.stopAll();
+                }
+                else
+                {
+                    this.scene.start('endGame');
+                    this.scene.stop('JuegoScene');
+                    if(sound_enabled)
+                    	this.sound.stopAll();
                     gameOver = true;
                 }
             }
 
-            function choque(ney, oponent) {
+            function choque(ney, oponent)
+            {
 
-                if (!mostarExp) {
-                 mostarExp = true;
-                 exploto.visible = true;
-                 exploto.x = ney.x;
-				 exploto.y = ney.y;
+                if (!mostarExp)
+                {
+                    mostarExp = true;
+                    exploto.visible = true;
+                    exploto.x = ney.x;
+                    exploto.y = ney.y;
                 }
 
-                if (!chocado) {
+                if (!chocado)
+                {
 
                     chocado = true;
                     oponent.visible = false;
@@ -405,42 +758,55 @@
 
                     score += puntajeCorriendo;
 
-                } else {
+                }
+                else
+                {
                     oponent.visible = false;
                     oponent.y = 1500;
                     score += puntajeRodando;
                 }
                 
-                
+                if("vibrate" in window.navigator && vibration_enabled) 
+						window.navigator.vibrate(100);
 
 
                 scoreText.setText('Score: ' + score);
             }
 
-            function choqueA(player, player2) {
+            function choqueA(player, player2)
+            {
 
-                if (!chocado) {
+                if (!chocado)
+                {
                     player2.visible = false;
                     player2.y = 1500;
-                } else {
+                }
+                else
+                {
                     player2.visible = false;
                     player2.y = 1500;
                     cantSegundos -= penalizacionArbitro;
                     timeText.setText('Time: ' + cantSegundos);
                 }
 
+                if("vibrate" in window.navigator && vibration_enabled) 
+						window.navigator.vibrate(100);
+
             }
 
-            function choqueZ(player, player2) {
+            function choqueZ(player, player2)
+            {
 
-				  if (!mostarExp) {
-                 mostarExp = true;
-                 exploto.visible = true;
-                 exploto.x = player.x;
-				 exploto.y = player.y;
+                if (!mostarExp)
+                {
+                    mostarExp = true;
+                    exploto.visible = true;
+                    exploto.x = player.x;
+                    exploto.y = player.y;
                 }
 
-                if (!chocado) {
+                if (!chocado)
+                {
 
                     chocado = true;
                     player2.visible = false;
@@ -450,44 +816,52 @@
 
                     cantSegundos -= penalizacionZuniga;
                     timeText.setText('Time: ' + cantSegundos);
-                } else {
+                }
+                else
+                {
                     player2.visible = false;
                     player2.y = 1500;
                     cantSegundos -= penalizacionZuniga;
                     timeText.setText('Time: ' + cantSegundos);
                 }
 
+                if("vibrate" in window.navigator && vibration_enabled) 
+						window.navigator.vibrate(100);
+
             }
 
-            function creditsCheck(){
+            function creditsCheck()
+            {
             	//console.log('fdsfds');
-            	if(duracionCredits == 0){      
-            	console.log('fdsfds');     		
-            		this.scene.start('MainMenu');
+            	if(duracionCredits == 0)
+                {      
+            		this.scene.start('mainMenu');
             	}
-            	else{
+            	else
+                {
             		duracionCredits--;
-	            	temporizador.reset({delay: 1000, callback: creditsCheck, callbackScope: this,repeat:1});	
-
-            		
+	            	temporizador.reset({delay: 1000, callback: creditsCheck, callbackScope: this,repeat:1});
             	}
 
 
             }
 
-		 var config = {
-		            type: Phaser.AUTO,
-		            width: 600,
-		            height: 600,
-		            backgroundColor: '#b8b8b8',
-		            physics: {
-		                default: 'arcade',
-		                arcade: {
-		                    gravity: {y: 0}
-		                }
-		            },
-		            scene: [ Credits,MainMenu, JuegoScene ]
-		        };
+        var config =
+        {
+            type: Phaser.AUTO,
+            width: 600,
+            height: 600,
+            backgroundColor: '#b8b8b8',
+            physics:
+            {
+                default: 'arcade',
+                arcade:
+                {
+                    gravity: {y: 0}
+                }
+            },
+            scene: [ Credits, MainMenu, Pause, EndGame, JuegoScene ]
+        };
 
         var game = new Phaser.Game(config);
 
