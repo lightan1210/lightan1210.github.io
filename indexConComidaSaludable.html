@@ -4,18 +4,17 @@
     <head>
         <script src="//cdn.jsdelivr.net/npm/phaser@3.12.0/dist/phaser.min.js"></script>
         <script src="Phaser3Swipe.min.js"></script>
-        <script src="seek.js"></script>
         <script src="movements.js"></script>
-        <script src="flee.js"></script>
     </head>
     <body>
         <script>       
-        var cancha, neymar, arbitro, chocado, chocado2, scoreText, endGameText, timeText, temporizador, exploto, cursors, sound_enabled = true, soundInfo , vibration_enabled = true, vibrationInfo,
-        	aFormar;
+        var cancha, neymar, arbitro, chocado, chocado2, scoreText, endGameText, timeText, temporizador, exploto, cursors, sound_enabled = true, soundInfo , vibration_enabled = true, vibrationInfo;
 
         var config, config2, config3, config4;
 
-        var score, cantSegundos, puntajeCorriendo = 5, puntajeRodando = 10, penalizacionArbitro = 2, penalizacionZuniga = 5, duracionCredits = 2, formation = false;
+        var score, cantSegundos, puntajeCorriendo = 5, puntajeRodando = 10, penalizacionArbitro = 2, penalizacionZuniga = 5, duracionCredits = 2;
+
+        var oponents;
 
         var Credits = new Phaser.Class({
 
@@ -143,36 +142,13 @@
             //preload: function (){},
             
             create: function (){
-                playButton = this.add.text(100, 100, 'Play', { fill: '#f00' });
+                playButton = this.add.text(100, 100, 'Click me to play!', { fill: '#0f0' });
                 playButton.setInteractive();
 
-                playButton.on('pointerdown', () => {
-                	this.scene.start('juegoScene'); //this.scene.stop(); 
+                playButton.on('pointerdown', () => {this.scene.start('juegoScene'); //this.scene.stop(); 
             	});
 
-            	playButton2 = this.add.text(200, 100, 'Normal', { fill: '#0f0'});
-            	playButton2.setInteractive();
-
-            	playButton2.on('pointerdown', () => {
-
-            		playButton2.setColor('#0f0');
-            		playButton3.setColor('#f00');
-
-            		formation = false;
-            	})
-
-            	playButton3 = this.add.text(300, 100, 'Formation', { fill: '#f00'});
-            	playButton3.setInteractive();
-
-            	playButton3.on('pointerdown', () => {
-
-            		playButton2.setColor('#f00');
-            		playButton3.setColor('#0f0');
-
-            		formation = true;
-            	})
-
-                storyButton = this.add.text(100, 300, 'About the story of the game', { fill: '#f00' });
+                storyButton = this.add.text(100, 200, 'About the story of the game', { fill: '#0f0' });
             }
 
         });
@@ -193,6 +169,7 @@
 
             create: function (){
                
+
                 //Configuración del botón de reanudación del juego
             	resumeButton = this.add.text(100, 100, 'Resume', { fill: '#0f0' });
                 resumeButton.setInteractive();
@@ -316,10 +293,11 @@
 
             create: function (){
 
+                oponents = [];
             	score = 0;
             	cantSegundos = 60;
                 cancha = this.add.tileSprite(300, 500, 600, 1000, 'pitch');
-                neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 900, 'neymar').setScale(2.5);
+                neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 800, 'neymar').setScale(2.5);
                 oponente = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
                 zuniga = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'zuniga').setScale(2.5);
                 arbitro = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'arbitro').setScale(2.5);
@@ -327,33 +305,23 @@
                 oponente3 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
                 oponente4 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
 
-                if(formation)
-            	{
-            		//switch(Phaser.Math.Between(1, 3)){
-                    //	case 1:
-                    		aFormar = [oponente, oponente2, oponente3, oponente4];
-                    //		break;
-                    //	case 2:
-                    //		aFormar = [oponente2, zuniga, oponente4, oponente3, oponente];
-                    //		break;
-                    //	case 3:
-                    //		aFormar = [oponente3, oponente4, zuniga, oponente, oponente2];
-                    //}
-            	}
-
+                oponents.push(oponente);
+                oponents.push(oponente2);
+                oponents.push(oponente3);
+                oponents.push(oponente4);
+                oponents.push(zuniga);
                 
                 neymar.setCollideWorldBounds(true);
 
-                chocarOp = this.physics.add.overlap(neymar, oponente, choque, null, this);
-                chocarOp2 = this.physics.add.overlap(neymar, oponente2, choque, null, this);
-                chocarOp3 = this.physics.add.overlap(neymar, oponente3, choque, null, this);
-                chocarOp4 = this.physics.add.overlap(neymar, oponente4, choque, null, this);
-                chocarZ = this.physics.add.overlap(neymar, zuniga, choqueZ, null, this);
-                chocarA = this.physics.add.overlap(neymar, arbitro, choqueA, null, this);
+                this.physics.add.overlap(neymar, oponente, choque, null, this);
+                this.physics.add.overlap(neymar, oponente2, choque, null, this);
+                this.physics.add.overlap(neymar, zuniga, choqueZ, null, this);
+                this.physics.add.overlap(neymar, arbitro, choqueA, null, this);
 
                 exploto =  this.add.image(10, 10, 'explosion').setScale(1.5);
 
-                
+                setParameters(165, 250, 60, 60);
+
 
                 config = {
                     key: 'walkNey',
@@ -408,6 +376,7 @@
                 oponente4.anims.play('walkOponente');
                 zuniga.anims.play('walkZunniga');
                 arbitro.anims.play('walkArbitro');
+                arbitro.angle = 90;
 
                 if(sound_enabled)
                 	this.sound.play('star');
@@ -476,128 +445,45 @@
 
             update: function ()
             {
-            	if(!formation)
-            	{
-	                if (oponente.y >= 1000) {
-	                    oponente.visible = true;
-	                    oponente.y = 0;
-	                    oponente.x = Phaser.Math.Between(50, 300);
-	                } else
-	                    oponente.y += 3; //El oponente avanza 2 lugares
+                if (oponente.y >= 1000) {
+                    oponente.visible = true;
+                    oponente.y = 0;
+                    oponente.x = Phaser.Math.Between(50, 300);
+                } //else
+                 //   oponente.y += 2; //El oponente avanza 2 lugares
 
-	                if (oponente2.y >= 1000) {
-	                    oponente2.visible = true;
-	                    oponente2.y = 0;
-	                    oponente2.x = Phaser.Math.Between(300, 550);
-	                } else
-	                    oponente2.y += 2; //El oponente avanza 2 lugares
+                if (oponente2.y >= 1000) {
+                    oponente2.visible = true;
+                    oponente2.y = 0;
+                    oponente2.x = Phaser.Math.Between(300, 550);
+                } //else
+                   // oponente2.y += 2; //El oponente avanza 2 lugares
 
-                    if (oponente3.y >= 1000) {
-                        oponente3.visible = true;
-                        oponente3.y = 0;
-                        oponente3.x = Phaser.Math.Between(300, 550);
-                    } else
-                        oponente3.y += 2; //El oponente avanza 2 lugares
+                if (zuniga.y >= 1000) {
+                    zuniga.visible = true;
+                    zuniga.y = 0;
+                    zuniga.x = Phaser.Math.Between(50, 550);
+                } //else
+                  //  zuniga.y += 5; //Zuñiga avanza 5 lugares
 
-                    if (oponente4.y >= 1000) {
-                        oponente4.visible = true;
-                        oponente4.y = 0;
-                        oponente4.x = Phaser.Math.Between(300, 550);
-                    } else
-                        oponente4.y += 2; //El oponente avanza 2 lugares
+                if (arbitro.y >= 1000) {
+                    arbitro.visible = true;
+                    arbitro.y = 0;
+                    arbitro.x = Phaser.Math.Between(50, 550);
+                } //else {
+                    //arbitro.x = neymar.x;
+                    //arbitro.y += 1; //Avanza el arbitro un lugar
+                arrive(arbitro,neymar);
 
-	                if (zuniga.y >= 1000) {
-	                    zuniga.visible = true;
-	                    zuniga.y = 0;
-	                    zuniga.x = Phaser.Math.Between(50, 550);
-	                } else
-	                    zuniga.y += 5; //Zuñiga avanza 5 lugares
+                AFormation(arbitro, oponents);
+                //}
 
-	                if (arbitro.y >= 1000) {
-	                    arbitro.visible = true;
-	                    arbitro.y = 0;
-	                    arbitro.x = Phaser.Math.Between(50, 550);
-	                } else {
-	                    //arbitro.x = neymar.x;
-	                    //arbitro.y += 1; //Avanza el arbitro un lugar
-	                    //seek(arbitro,neymar);
-	                    posSigAux = seek(arbitro, neymar);
-	                    //console.log('la guacha');
-	                    
-	                    if(Math.sqrt(Math.pow((arbitro.x-oponente.x),2)+Math.pow((arbitro.y-oponente.y),2)) < 125)
-	                    {
-	                        posSigAux = flee(arbitro,oponente);
-	                    }
+                if(mostarExp){
+					mostarExp = false;
+				}else{
+					exploto.visible = false; 
+				}   
 
-	                    if(Math.sqrt(Math.pow((arbitro.x-oponente2.x),2)+Math.pow((arbitro.y-oponente2.y),2)) < 125)
-	                    {
-	                        posSigAux = flee(arbitro,oponente2);
-	                    }
-
-                        if(Math.sqrt(Math.pow((arbitro.x-oponente3.x),2)+Math.pow((arbitro.y-oponente3.y),2)) < 125)
-                        {
-                            posSigAux = flee(arbitro,oponente3);
-                        }
-
-                        if(Math.sqrt(Math.pow((arbitro.x-oponente4.x),2)+Math.pow((arbitro.y-oponente4.y),2)) < 125)
-                        {
-                            posSigAux = flee(arbitro,oponente4);
-                        }
-
-	                    if(Math.sqrt(Math.pow((arbitro.x-zuniga.x),2)+Math.pow((arbitro.y-zuniga.y),2)) < 125)
-	                    {
-	                        posSigAux = flee(arbitro,zuniga);
-	                    }
-
-	                    arbitro.body.velocity = posSigAux;
-	                }
-
-	                if(mostarExp){
-						mostarExp = false;
-					}else{
-						exploto.visible = false; 
-					}
-				} else //juego con formacion
-				{
-
-                    if (zuniga.y >= 1200) {
-                        zuniga.visible = true;
-                        zuniga.y = 0;
-                        zuniga.x = Phaser.Math.Between(50, 550);
-                    } else
-                        zuniga.y += 5; //Zuñiga avanza 5 lugares
-
-					if (aFormar[aFormar.length-1].y >= 1200) {
-	                    arbitro.visible = true;
-	                    arbitro.y = 0;
-	                    oponente.y = 0;
-                        oponente.x = arbitro.x;
-	                    oponente2.y = 0;
-                        oponente2.x =0;
-                        oponente3.y = 0;
-                        oponente3.x =0;
-                        oponente4.y = 0;
-                        oponente4.x =0;
-
-	                    arbitro.x = Phaser.Math.Between(50, 550);
-	                } else {
-	                    //arbitro.x = neymar.x;
-	                    //arbitro.y += 1; //Avanza el arbitro un lugar
-	                    //seek(arbitro,neymar);
-	                    arbitro.y += 2;
-	                    //console.log('la guacha');
-	                    setParameters(60, 50, 60, 60);
-                        arrive(arbitro,neymar);
-                        setParameters(200, 50, 60, 60);
-	                    AFormation(arbitro, aFormar);
-	                }
-
-	                if(mostarExp){
-						mostarExp = false;
-					}else{
-						exploto.visible = false; 
-					}
-				}
             },
 
         });
@@ -618,40 +504,23 @@
         }
 
         function choque(ney, oponent) {
-
-        	if(!formation)
-        	{
-	            if (!mostarExp) {
-	             mostarExp = true;
-	             exploto.visible = true;
-	             exploto.x = ney.x;
-				 exploto.y = ney.y;
-	            }
-
-	            if (!chocado) {
-	                chocado = true;
-	                oponent.visible = false;
-	                oponent.y = 1500;
-	                ney.anims.play('rodar');
-	                score += puntajeCorriendo;
-	            } else {
-	                oponent.visible = false;
-	                oponent.y = 1500;
-	                score += puntajeRodando;
-	            }
-        	}
-        	else
-        	{
-	            if (!chocado) {
-	                chocado = true;
-	                ney.anims.play('rodar');
-	                score += puntajeCorriendo;
-	            } else {
-
-	                score += puntajeRodando;
-	            }
-        	}
-
+            if (!mostarExp) {
+             mostarExp = true;
+             exploto.visible = true;
+             exploto.x = ney.x;
+			 exploto.y = ney.y;
+            }
+            if (!chocado) {
+                chocado = true;
+                //oponent.visible = false;
+                //oponent.y = 1500;
+                ney.anims.play('rodar');
+                score += puntajeCorriendo;
+            } else {
+                //oponent.visible = false;
+                //oponent.y = 1500;
+                score += puntajeRodando;
+            }                
             if("vibrate" in window.navigator && vibration_enabled) 
 					window.navigator.vibrate(100);
 
@@ -659,42 +528,23 @@
         }
 
         function choqueA(player, player2) {
-
-        	if(!formation)
-        	{
-	            if (!chocado) {
-	                player2.visible = false;
-	                player2.y = 1500;
-	            } else {
-	                player2.visible = false;
-	                player2.y = 1500;
-	                cantSegundos -= penalizacionArbitro;
-
-	                if(cantSegundos<0)
-	                    cantSegundos = 0;
-	                timeText.setText('Time: ' + cantSegundos);
-	            }
-        	}
-        	else
-        	{
-        		if (chocado) {
-	                player2.visible = false;
-	                //player2.y = 1500;
-	                cantSegundos -= penalizacionArbitro;
-
-	                if(cantSegundos<0)
-	                    cantSegundos = 0;
-
-	                timeText.setText('Time: ' + cantSegundos);
-            	}
-        	}
+            if (!chocado) {
+                //player2.visible = false;
+                //player2.y = 1500;
+            } else {
+                //player2.visible = false;
+                //player2.y = 1500;
+                cantSegundos -= penalizacionArbitro;
+                if(cantSegundos<0)
+                    cantSegundos = 0;
+                timeText.setText('Time: ' + cantSegundos);
+            }
             if("vibrate" in window.navigator && vibration_enabled) 
 					window.navigator.vibrate(100);
 
         }
 
         function choqueZ(player, player2) {
-
 			if (!mostarExp) {
                 mostarExp = true;
                 exploto.visible = true;
@@ -704,14 +554,14 @@
 
             if (!chocado) {
                 chocado = true;
-                player2.visible = false;
-                player2.y = 1500;
+                //player2.visible = false;
+                //player2.y = 1500;
                 player.anims.play('rodar');
                 cantSegundos -= penalizacionZuniga;
                 timeText.setText('Time: ' + cantSegundos);
             } else {
-                player2.visible = false;
-                player2.y = 1500;
+                //player2.visible = false;
+                //player2.y = 1500;
                 cantSegundos -= penalizacionZuniga;
                 if(cantSegundos<0)
                     cantSegundos = 0;
@@ -724,7 +574,6 @@
         }
 
         function creditsCheck(){
-
         	if(duracionCredits == 0){      
         		this.scene.start('mainMenu');
         	}
@@ -732,13 +581,6 @@
         		duracionCredits--;
             	temporizador.reset({delay: 1000, callback: creditsCheck, callbackScope: this,repeat:1});	           
         	}
-        }
-
-        function distancia(vector1,vector2)
-        {
-            dis = Math.sqrt((vector1.x-vector2.x)^2 + (vector1.y - vector2.y)^2);
-
-            return dis;
         }
 
 	    var config = {

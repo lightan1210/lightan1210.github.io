@@ -2,17 +2,22 @@
     
    	function seek(vehiculo, objetivo){
      //Obtengo VectorDeseado
-     var VectorDeseado = calcularVelocidadDeseada(vehiculo, objetivo);
+     var VectorDeseado = calcularVelocidadDeseada2(vehiculo, objetivo);
      
      //Obtengo el vector Steering
-     var vectorSteeringForce = calcularSteeringForce(vehiculo.body.velocity, VectorDeseado);
+     var vectorSteeringForce = calcularSteeringForce2(vehiculo.body.velocity, VectorDeseado);
 
      //aplico el vector de fuerza al vehiculo
-     aplicarVectorDeFuerza(vehiculo,vectorSteeringForce);
+
+     var vehiculoVelocidad = vehiculo.body.velocity;
+
+     return vehiculoVelocidad.add(vectorSteeringForce);
+
+     //return (vehiculoVelocidad.add(vectorSteeringForce));
 
     }
 
-	function calcularVelocidadDeseada(vehiculo,objetivo) {
+	function calcularVelocidadDeseada2(vehiculo,objetivo) {
 	     // Calculo el vector deseado = normalizado(POSICION TARGET - POSICION VEHICULO) * maximaVelocidad
 
 	     vehiculo.MAX_SPEED = 165 ;
@@ -44,7 +49,7 @@
 	    return VectorDeseado;
  	}
 
-	function calcularSteeringForce(vehiculo,VectorDeseado){
+	function calcularSteeringForce2(vehiculo,VectorDeseado){
 	    // Calculo el vector Steering VectorDeseado-Velocidad
 
 	    var vectorSteeringForce = VectorDeseado;
@@ -52,7 +57,7 @@
 	    return vectorSteeringForce;
 	}
 
-	function aplicarVectorDeFuerza(vehiculo,vectorSteeringForce){
+	function aplicarVectorDeFuerza2(vehiculo,vectorSteeringForce){
 
 	    //Calculo la nueva velocidad y posicion del vehiculo sumando la posicion con el vector de fuerza
 	    //vehiculo.angle=vehiculo.body.velocity.angle()*57.2958;

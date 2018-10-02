@@ -318,8 +318,8 @@
 
             	score = 0;
             	cantSegundos = 60;
-                cancha = this.add.tileSprite(300, 500, 600, 1000, 'pitch');
-                neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 900, 'neymar').setScale(2.5);
+                cancha = this.add.tileSprite(300, 300, 600, 600, 'pitch');
+                neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 500, 'neymar').setScale(2.5);
                 oponente = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
                 zuniga = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'zuniga').setScale(2.5);
                 arbitro = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'arbitro').setScale(2.5);
@@ -329,16 +329,16 @@
 
                 if(formation)
             	{
-            		//switch(Phaser.Math.Between(1, 3)){
-                    //	case 1:
-                    		aFormar = [oponente, oponente2, oponente3, oponente4];
-                    //		break;
-                    //	case 2:
-                    //		aFormar = [oponente2, zuniga, oponente4, oponente3, oponente];
-                    //		break;
-                    //	case 3:
-                    //		aFormar = [oponente3, oponente4, zuniga, oponente, oponente2];
-                    //}
+            		switch(Phaser.Math.Between(1, 3)){
+                    	case 1:
+                    		aFormar = [oponente, oponente2, oponente3, oponente4, zuniga];
+                    		break;
+                    	case 2:
+                    		aFormar = [oponente2, zuniga, oponente4, oponente3, oponente];
+                    		break;
+                    	case 3:
+                    		aFormar = [oponente3, oponente4, zuniga, oponente, oponente2];
+                    }
             	}
 
                 
@@ -353,7 +353,7 @@
 
                 exploto =  this.add.image(10, 10, 'explosion').setScale(1.5);
 
-                
+                setParameters(165, 25, 60, 60);
 
                 config = {
                     key: 'walkNey',
@@ -513,7 +513,7 @@
 	                } else
 	                    zuniga.y += 5; //Zuñiga avanza 5 lugares
 
-	                if (arbitro.y >= 1000) {
+	                if (arbitro.y >= 600) {
 	                    arbitro.visible = true;
 	                    arbitro.y = 0;
 	                    arbitro.x = Phaser.Math.Between(50, 550);
@@ -560,14 +560,7 @@
 				} else //juego con formacion
 				{
 
-                    if (zuniga.y >= 1200) {
-                        zuniga.visible = true;
-                        zuniga.y = 0;
-                        zuniga.x = Phaser.Math.Between(50, 550);
-                    } else
-                        zuniga.y += 5; //Zuñiga avanza 5 lugares
-
-					if (aFormar[aFormar.length-1].y >= 1200) {
+					if (aFormar[aFormar.length-1].y >= 1500) {
 	                    arbitro.visible = true;
 	                    arbitro.y = 0;
 	                    oponente.y = 0;
@@ -578,6 +571,8 @@
                         oponente3.x =0;
                         oponente4.y = 0;
                         oponente4.x =0;
+	                    zuniga.y = 0;
+                        zuniga.x = 0;
 
 	                    arbitro.x = Phaser.Math.Between(50, 550);
 	                } else {
@@ -586,9 +581,7 @@
 	                    //seek(arbitro,neymar);
 	                    arbitro.y += 2;
 	                    //console.log('la guacha');
-	                    setParameters(60, 50, 60, 60);
-                        arrive(arbitro,neymar);
-                        setParameters(200, 50, 60, 60);
+                        //arrive(arbitro,neymar);
 	                    AFormation(arbitro, aFormar);
 	                }
 
@@ -744,7 +737,7 @@
 	    var config = {
             type: Phaser.AUTO,
             width: 600,
-            height: 1000,
+            height: 600,
             backgroundColor: '#b8b8b8',
             physics: {
                 default: 'arcade',
