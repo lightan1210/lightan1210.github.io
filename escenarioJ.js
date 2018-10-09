@@ -16,36 +16,19 @@ var JuegoScene = new Phaser.Class({
 
         score = 0;
         cantSegundos = 60;
-        cancha = this.add.tileSprite(300, 500, 600, 1000, 'pitch');
-        neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 900, 'neymar').setScale(2.5);
+        cancha = this.add.tileSprite(300, 400, 600, 800, 'pitch');
+        neymar = this.physics.add.sprite(Phaser.Math.Between(50, 550), 700, 'neymar').setScale(2.5);
         oponente = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
         zuniga = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'zuniga').setScale(2.5);
         arbitro = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'arbitro').setScale(2.5);
         oponente2 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
-        oponente3 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
-        oponente4 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
-
-        if(formation)
-        {
-            //switch(Phaser.Math.Between(1, 3)){
-            //  case 1:
-                    aFormar = [oponente, oponente2, oponente3, oponente4];
-            //      break;
-            //  case 2:
-            //      aFormar = [oponente2, zuniga, oponente4, oponente3, oponente];
-            //      break;
-            //  case 3:
-            //      aFormar = [oponente3, oponente4, zuniga, oponente, oponente2];
-            //}
-        }
-
+        
         
         neymar.setCollideWorldBounds(true);
 
         chocarOp = this.physics.add.overlap(neymar, oponente, choque, null, this);
         chocarOp2 = this.physics.add.overlap(neymar, oponente2, choque, null, this);
-        chocarOp3 = this.physics.add.overlap(neymar, oponente3, choque, null, this);
-        chocarOp4 = this.physics.add.overlap(neymar, oponente4, choque, null, this);
+       
         chocarZ = this.physics.add.overlap(neymar, zuniga, choqueZ, null, this);
         chocarA = this.physics.add.overlap(neymar, arbitro, choqueA, null, this);
 
@@ -105,10 +88,33 @@ var JuegoScene = new Phaser.Class({
         neymar.anims.play('walkNey');
         oponente.anims.play('walkOponente');
         oponente2.anims.play('walkOponente');
-        oponente3.anims.play('walkOponente');
-        oponente4.anims.play('walkOponente');
+        
         zuniga.anims.play('walkZunniga');
         arbitro.anims.play('walkArbitro');
+
+
+
+        if(formation)
+        {
+            //switch(Phaser.Math.Between(1, 3)){
+            //  case 1:
+            oponente3 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
+            oponente4 = this.physics.add.sprite(Phaser.Math.Between(50, 550), 0, 'oponente').setScale(2.5);
+            aFormar = [oponente, oponente2, oponente3, oponente4];
+            
+            chocarOp3 = this.physics.add.overlap(neymar, oponente3, choque, null, this);
+            chocarOp4 = this.physics.add.overlap(neymar, oponente4, choque, null, this);
+
+            oponente3.anims.play('walkOponente');
+            oponente4.anims.play('walkOponente');
+            //      break;
+            //  case 2:
+            //      aFormar = [oponente2, zuniga, oponente4, oponente3, oponente];
+            //      break;
+            //  case 3:
+            //      aFormar = [oponente3, oponente4, zuniga, oponente, oponente2];
+            //}
+        }
 
         if(sound_enabled)
             this.sound.play('star');
@@ -207,7 +213,7 @@ var JuegoScene = new Phaser.Class({
             else
                 oponente2.y += 2; //El oponente avanza 2 lugares
 
-            if (oponente3.y >= 1000)
+            /*if (oponente3.y >= 1000)
             {
                 oponente3.visible = true;
                 oponente3.y = 0;
@@ -224,6 +230,7 @@ var JuegoScene = new Phaser.Class({
             }
             else
                 oponente4.y += 2; //El oponente avanza 2 lugares
+            */
 
             if (zuniga.y >= 1000)
             {
@@ -258,7 +265,7 @@ var JuegoScene = new Phaser.Class({
                     posSigAux = flee(arbitro,oponente2);
                 }
 
-                if(Math.sqrt(Math.pow((arbitro.x-oponente3.x),2)+Math.pow((arbitro.y-oponente3.y),2)) < 125)
+                /*if(Math.sqrt(Math.pow((arbitro.x-oponente3.x),2)+Math.pow((arbitro.y-oponente3.y),2)) < 125)
                 {
                     posSigAux = flee(arbitro,oponente3);
                 }
@@ -266,7 +273,7 @@ var JuegoScene = new Phaser.Class({
                 if(Math.sqrt(Math.pow((arbitro.x-oponente4.x),2)+Math.pow((arbitro.y-oponente4.y),2)) < 125)
                 {
                     posSigAux = flee(arbitro,oponente4);
-                }
+                }*/
 
                 if(Math.sqrt(Math.pow((arbitro.x-zuniga.x),2)+Math.pow((arbitro.y-zuniga.y),2)) < 125)
                 {
@@ -286,8 +293,8 @@ var JuegoScene = new Phaser.Class({
             } else
                 zuniga.y += 5; //Zuñiga avanza 5 lugares
 
-            if (oponente.y >= 1200 && oponente2.y >= 1200 && oponente3.y >= 1200 && oponente4.y >= 1200
-                && arbitro.y >= 1200)
+            if (oponente.y >= 900 && oponente2.y >= 900 && oponente3.y >= 900 && oponente4.y >= 900
+                && arbitro.y >= 900)
             {
                 arbitro.visible = true;
                 arbitro.y = 0;
@@ -311,9 +318,9 @@ var JuegoScene = new Phaser.Class({
                 //arbitro.x = neymar.x;
                 //arbitro.y += 1; //Avanza el arbitro un lugar
                 //seek(arbitro,neymar);
-                arbitro.y += 2;
+                //arbitro.y += 2;
                 //console.log('la guacha');
-                setParameters(60, 50, 60, 60);
+                setParameters(80, 50, 60, 60);
                 arrive(arbitro,neymar);
                 setParameters(200, 50, 60, 60);
                 AFormation(arbitro, aFormar);

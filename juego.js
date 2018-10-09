@@ -126,7 +126,7 @@ function distancia(vector1,vector2)
 var config = {
     type: Phaser.AUTO,
     width: 600,
-    height: 1000,
+    height: 800,
     backgroundColor: '#b8b8b8',
     physics: {
         default: 'arcade',
@@ -134,7 +134,7 @@ var config = {
             gravity: {y: 0}
         }
     },
-    scene: [Credits, Instructions, MainMenu, Pause, EndGame, JuegoScene]
+    scene: [Credits, History, Instructions, MainMenu, Pause, EndGame, JuegoScene]
 };
 
 var game = new Phaser.Game(config);
