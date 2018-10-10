@@ -21,7 +21,7 @@ var MainMenu = new Phaser.Class({
 
         var colorApagado = '#a3a1a1';
         var colorPrendido = '#ff0';
-        var colorMenues = '#1eff5b';
+        var colorMenues = '#fff';
 
         playButton = this.add.text(50, 100, 'Play', { fill: colorMenues }).setScale(tamEscalar);
         playButton.setInteractive();
