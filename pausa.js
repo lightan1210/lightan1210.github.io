@@ -15,12 +15,12 @@ var Pause = new Phaser.Class({
     {
        
         //Configuración del botón de reanudación del juego
-        resumeButton = this.add.text(100, 100, 'Resume', { fill: '#0f0' });
+        resumeButton = this.add.text(100, 100, 'Resume', { fill: '#fff' });
         resumeButton.setInteractive();
         resumeButton.on('pointerdown', () => {this.scene.switch('juegoScene'); this.scene.stop(); if(sound_enabled)this.sound.play('star');});
 
         //Configuración del botón de "volver a menú ppal."
-        homeButton2 = this.add.text(100, 200, 'Back to main menu', { fill: '#0f0' });
+        homeButton2 = this.add.text(100, 200, 'Back to main menu', { fill: '#fff' });
         homeButton2.setInteractive();
         homeButton2.on('pointerdown', () => {formation = false; this.scene.switch('mainMenu'); this.scene.stop('juegoScene');});
 
@@ -38,7 +38,7 @@ var Pause = new Phaser.Class({
         });
 
         //Creación de etiqueta que indica si el audio está activado o desactivado.
-        soundInfo = this.add.text(250, 350, '', { fill: '#0f0' });
+        soundInfo = this.add.text(250, 350, '', { fill: '#fff' });
 
 
         //Configuración de botones para activar o desactivar vibración en dispositivos móviles
@@ -56,7 +56,7 @@ var Pause = new Phaser.Class({
         });
         
         //Creación de etiqueta que indica si la vibración está activada o desactivada.
-        vibrationInfo = this.add.text(250, 500, '', { fill: '#0f0' });
+        vibrationInfo = this.add.text(250, 500, '', { fill: '#fff' });
     },
 
 

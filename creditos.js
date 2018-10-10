@@ -58,7 +58,7 @@ var Credits = new Phaser.Class({
         progressBar.x = -100;
         progressBox.x = -100;
         progressBox.fillStyle(0x222222, 0.8);
-        progressBox.fillRect(240, 270, 320, 50);
+        progressBox.fillRect(240, 385, 320, 50);
 
 
         width = this.cameras.main.width;
@@ -76,20 +76,20 @@ var Credits = new Phaser.Class({
         loadingText.setOrigin(0.5, 0.5);
         percentText = this.make.text({
             x: width / 2,
-            y: height / 2 - 5,
-            text: '0%',
+            y: height / 2   ,
+            text: '1%',
             style: {
                 font: '18px monospace',
                 fill: '#ffffff'
             }
         });
-        percentText.setOrigin(0.5, 0.5);
+        percentText.setOrigin(0.5, 0,5);
 
         this.load.on('progress', function (value) {
             percentText.setText(parseInt(value * 100) + '%');
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
-            progressBar.fillRect(250, 280, 300 * value, 30);
+            progressBar.fillRect(250, 395, 300 * value, 30);
         });
          
         this.load.on('complete', function () {
@@ -102,7 +102,7 @@ var Credits = new Phaser.Class({
 
     create: function ()
     {
-        this.add.image(300, 300, 'unco');
+        this.add.image(300, 400, 'unco');
         temporizador = this.time.addEvent({delay: 1000, callback: creditsCheck, callbackScope: this});
     },
 
